@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+
+<script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
+<script type="text/javascript" type="text/javascript">
+  var ros = new ROSLIB.Ros({
+    url : 'ws://localhost:9090'
+  });
+  //Including the roslibjs scripts in order to communicate with ROS topics.
+  //Create rosbridge node to connect the server to ROS master.
+  ros.on('connection', function() {
+    document.getElementById("status").innerHTML = "Connected";
+  });
+
+  ros.on('error', function(error) {
+    document.getElementById("status").innerHTML = "Error";
+  });
+
+  ros.on('close', function() {
+    document.getElementById("status").innerHTML = "Closed";
+  });
+
+//Published node to velocity topic
+//Topic name could be replaced with "tb_cmd_vel" or "/cmd_vel_accel"
+  var cmd_vel_talker = new ROSLIB.Topic({
+    ros : ros,
+    name : "/cmd_vel_accel",
+    messageType : 'geometry_msgs/Twist'
+  });
+
+//Publish desire twist message into the velocity topic
+  move = function (linear, angular) {
+    var twist = new ROSLIB.Message({
+      linear: {
+        x: linear,
+        y: 0,
+        z: 0,
+      },
+      angular: {
+        x: 0,
+        y: 0,
+        z: angular
+      }
+    });
+    cmd_vel_talker.publish(twist);
+  }
+
+  var Straight, Stop, room;
+
+//Function for navigation to desire destinations.
+//Using setTimeout and setInterval to publish constant twist message
+//since the roslibjs limited to only 1Hz published message at a time.  
+  function Turn_counterclockwise_A(){
+    setTimeout(function(){ move(0,0.5); }, 5010);
+    setTimeout(function(){ move(0,0.5); }, 6020);
+    setTimeout(function(){ move(0,0.5708); }, 7030);
+  }
+
+  function Turn_counterclockwise_B(){
+    move(0,0.5);
+    setTimeout(function(){ move(0,0.5); }, 1010);
+    setTimeout(function(){ move(0,0.5708); }, 2020);
+  }
+
+  function Return_base(){
+    setTimeout(function(){ move(0,0.5); }, 8010);
+    setTimeout(function(){ move(0,0.5); }, 9020);
+    setTimeout(function(){ move(0,0.5); }, 10030);
+    setTimeout(function(){ move(0,0.5); }, 11040);
+    setTimeout(function(){ move(0,0.5708); }, 12050);
+    setTimeout(function(){ move(0,0.5708); }, 13060);
+  }
+
+  function stop(){
+    clearInterval(Straight);
+  }
+
+  function go_straight(){
+    Straight = setInterval(function(){ move(0.5,0); }, 500);
+  }
+
+  function roomB(){
+    go_straight();
+    Stop = setTimeout(stop, 5000);
+    Turn_counterclockwise_A();
+  }
+
+  function roomA(){
+    Turn_counterclockwise_B();
+    setTimeout(function(){go_straight();}, 4000);
+    Stop = setTimeout(stop, 8000);
+    Return_base();
+  }
+
+</script>
+</head>
+
+<body>
+  <h1>Simple ROS User Interface</h1>
+  <p>Connection status: <span id="status"></span></p>
+  <button type="button" onclick="roomB()">Room B</button>
+  <button type="button" onclick="roomA()">Room A</button>
+</body>
+</html>

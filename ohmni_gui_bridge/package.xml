@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ohmni_gui_bridge</name>
+  <version>0.0.0</version>
+  <description>The ohmni_gui_bridge package</description>
+  <maintainer email="phuocly2304@gmail.com">phuocly</maintainer>
+  <license>MIT</license>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rosbridge_server</build_depend>
+  <build_export_depend>rosbridge_server</build_export_depend>
+  <exec_depend>rosbridge_server</exec_depend>
+
+
+</package>

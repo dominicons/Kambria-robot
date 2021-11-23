@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ohmni_amcl</name>
+  <version>0.0.0</version>
+  <description>The ohmni_amcl package</description>
+  <maintainer email="phuocly2304@gmail.com">phuocly</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
