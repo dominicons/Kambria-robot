@@ -1,3 +1,4 @@
+# **Ohmni Robot TDT-ROBO Team**
 # ohmni-ros-gui
 # **The required packages to build the control GUI for Ohmnibot**
 
@@ -75,3 +76,63 @@ Note: For convenience, we simulate the measured values from the sensor using the
 ```
 - Replace your SSID, password to connect HiveMQ server.
 - Data will be retrieved from hiveMQ server and displayed on screen Ohmni Robot
+
+## **4. QR code reading.**
+
+# **The required packages to build the read QR-code using python for Ohmnibot**
+
+These packages alow us to perfrom certain tasks on OHmnibot:
+
+# install library
+
+pip install imutils
+pip install qrcode
+pip install pyautogui
+pip install numpy
+pip install opencv-python
+pip install opencv-contrib-python
+pip install pyzbar
+
+# How code work
+
+# using pyautogui library for take screenshot
+
+use:
+    pyautogui.screenshot("screenshot.png")
+    
+This code help take the screenshot  and create image "screenshot.png"
+
+# using opencv2 library for reading image from screenshot
+
+use:
+    img = cv2.imread("screenshot.png")
+This code use opencv2 to open the image "screenshot.png"
+
+use:
+    cv2.imshow('Result', imutils.resize(img, width=600))
+This code show the result qr code data.
+
+# using qrcode library for reading QR code image
+
+use:
+    for barcode in decode(img):
+        myData = barcode.data.decode('utf-8')
+        print(myData)
+        pts = np.array([barcode.polygon], np.int32)
+        pts = pts.reshape((-1, 1, 2))
+        cv2.polylines(img, [pts], True, (255, 0, 255), 5)
+        pts2 = barcode.rect
+        cv2.putText(img, myData, (pts2[0], pts2[1]),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 255), 2)
+This code can transform qrcode image from "screenshot.png" to myData and show data.
+
+# using os library for remove file "screenshot.png"
+
+use:
+    path = 'screenshot.png'
+    os.remove(path)
+This code can remove file "screenshot.png" when finished reading QRcode
+
+# Run code 
+
+python robot_qr_tdt.py
